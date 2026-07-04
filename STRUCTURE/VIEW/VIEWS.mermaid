@@ -1,3 +1,4 @@
+classDiagram
     direction TB
 
     %% ==================== UI VIEWS ====================
@@ -680,4 +681,180 @@
             +data(index, role) QVariant
             +setData(index, value, role) bool
             +flags(index) Qt.ItemFlags
-            +
+            +refresh()
+        }
+
+        class InvoiceTableModel {
+            -QAbstractTableModel
+            -list~Invoice~ invoices
+            +rowCount()
+            +columnCount()
+            +data()
+            +refresh()
+        }
+
+        class ItemTableModel {
+            -QAbstractTableModel
+            -list~InventoryItem~ items
+            +rowCount()
+            +columnCount()
+            +data()
+        }
+
+        class EmployeeTableModel {
+            -QAbstractTableModel
+            -list~Employee~ employees
+            +rowCount()
+            +columnCount()
+            +data()
+        }
+
+        class UserTableModel {
+            -QAbstractTableModel
+            -list~User~ users
+            +rowCount()
+            +columnCount()
+            +data()
+        }
+
+        class BankTransactionTableModel {
+            -QAbstractTableModel
+            -list~BankTransaction~ transactions
+            +rowCount()
+            +columnCount()
+            +data()
+        }
+
+        class PayrollTableModel {
+            -QAbstractTableModel
+            -list~Payroll~ payrolls
+            +rowCount()
+            +columnCount()
+            +data()
+        }
+
+        class JournalEntryTableModel {
+            -QAbstractTableModel
+            -list~Transaction~ transactions
+            +rowCount()
+            +columnCount()
+            +data()
+        }
+
+        class AccountTreeModel {
+            -QAbstractItemModel
+            -list~Account~ accounts
+            -build_tree()
+            +data()
+            +index()
+            +parent()
+            +rowCount()
+        }
+    }
+
+    %% ==================== RELATIONSHIPS ====================
+    MainWindow --> NavigationSidebar : contains
+    MainWindow --> DashboardPage : contains
+    MainWindow --> InvoicesPage : contains
+    MainWindow --> AccountingPage : contains
+    MainWindow --> InventoryPage : contains
+    MainWindow --> PayrollPage : contains
+    MainWindow --> BankPage : contains
+    MainWindow --> SettingsPage : contains
+
+    InvoicesPage --> InvoiceListView : contains
+    InvoicesPage --> InvoiceFormView : contains
+    InvoicesPage --> ReceiptScanView : contains
+
+    InvoiceListView --> InvoiceTableModel : uses
+    InvoiceFormView --> InvoiceController : uses
+    ReceiptScanView --> OCRService : uses
+    ReceiptScanView --> InvoiceController : uses
+
+    AccountingPage --> ChartOfAccountsView : contains
+    AccountingPage --> JournalEntryView : contains
+    AccountingPage --> FinancialReportsView : contains
+
+    ChartOfAccountsView --> AccountTreeModel : uses
+    ChartOfAccountsView --> AccountController : uses
+
+    JournalEntryView --> JournalEntryTableModel : uses
+    JournalEntryView --> TransactionController : uses
+
+    FinancialReportsView --> ReportController : uses
+
+    InventoryPage --> ItemListView : contains
+    InventoryPage --> ItemFormView : contains
+    InventoryPage --> SupplierListView : contains
+
+    ItemListView --> ItemTableModel : uses
+    ItemListView --> InventoryController : uses
+    ItemFormView --> InventoryController : uses
+    SupplierListView --> SupplierController : (implicit)
+
+    PayrollPage --> EmployeeListView : contains
+    PayrollPage --> PayrollRunView : contains
+
+    EmployeeListView --> EmployeeTableModel : uses
+    EmployeeListView --> PayrollController : uses
+    PayrollRunView --> PayrollTableModel : uses
+    PayrollRunView --> PayrollController : uses
+
+    BankPage --> BankFeedView : contains
+    BankPage --> ReconciliationView : contains
+
+    BankFeedView --> BankTransactionTableModel : uses
+    BankFeedView --> BankController : uses
+    ReconciliationView --> BankController : uses
+
+    SettingsPage --> GeneralSettingsView : contains
+    SettingsPage --> ThemeSettingsView : contains
+    SettingsPage --> BackupSettingsView : contains
+    SettingsPage --> UserManagementView : contains
+
+    ThemeSettingsView --> ThemeController : uses
+    BackupSettingsView --> BackupService : uses
+    UserManagementView --> UserTableModel : uses
+    UserManagementView --> UserController : uses
+
+    %% Controllers use Services
+    InvoiceController --> DatabaseService : uses
+    InvoiceController --> ReportService : uses
+    InvoiceController --> EncryptionService : uses
+    TransactionController --> DatabaseService : uses
+    AccountController --> DatabaseService : uses
+    ReportController --> ReportService : uses
+    InventoryController --> DatabaseService : uses
+    PayrollController --> DatabaseService : uses
+    BankController --> BankFeedService : uses
+    BankController --> DatabaseService : uses
+    UserController --> DatabaseService : uses
+    UserController --> EncryptionService : uses
+    ThemeController --> DatabaseService : uses
+
+    %% Services use Models
+    DatabaseService --> Account : stores
+    DatabaseService --> Transaction : stores
+    DatabaseService --> Invoice : stores
+    DatabaseService --> InventoryItem : stores
+    DatabaseService --> Employee : stores
+    DatabaseService --> User : stores
+    DatabaseService --> Backup : stores
+    DatabaseService --> Theme : stores
+
+    %% DataModels use Models
+    AccountTableModel --> Account : holds
+    InvoiceTableModel --> Invoice : holds
+    ItemTableModel --> InventoryItem : holds
+    EmployeeTableModel --> Employee : holds
+    UserTableModel --> User : holds
+    BankTransactionTableModel --> BankTransaction : holds
+    PayrollTableModel --> Payroll : holds
+    JournalEntryTableModel --> Transaction : holds
+    AccountTreeModel --> Account : holds
+
+    %% Note for double-entry
+    note for Transaction "Double‑entry: total_debit = total_credit"
+    note for EncryptionService "AES‑256 encryption"
+    note for ReportService "PDF / Excel export"
+    note for DatabaseService "SQLite / PostgreSQL backend"
