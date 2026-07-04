@@ -2,7 +2,7 @@
 Contributing to AccounterPro
 ===============================
 
-Thank you for your interest in contributing to **AccounterPro** - the free
+Thank you for your interest in contributing to **AccounterPro** – the free
 open-source accounting software for small businesses. We welcome
 contributions of all kinds: code, documentation, bug reports, design ideas, and
 translations.
@@ -59,25 +59,25 @@ The software follows a **Model-View-Controller (MVC)** pattern, built with
 is documented in the following files, available in the ``STRUCTURE/`` folder of
 the repository:
 
-- **`STRUCTURE/STRUCTURE.mermaid`** - Complete class diagram covering all
+- **`STRUCTURE/STRUCTURE.mermaid`** – Complete class diagram covering all
   models, controllers, services, and UI views (core accounting, business
   management, technical layers, and security).
-- **`STRUCTURE/VIEW/VIEWS.mermaid`** - Detailed UI view hierarchy, showing all
+- **`STRUCTURE/VIEW/VIEWS.mermaid`** – Detailed UI view hierarchy, showing all
   pages, sub-views, and their relationships.
-- **`STRUCTURE/STRUCTURE.md`** - Recommended folder structure and organisation
+- **`STRUCTURE/STRUCTURE.md`** – Recommended folder structure and organisation
   of the source code.
-- **`STRUCTURE/recommended.md`** - Additional guidance on project layout.
+- **`STRUCTURE/recommended.md`** – Additional guidance on project layout.
 
 Please refer to these files for a comprehensive understanding of the codebase.
 The key layers are:
 
-- **UI (Views)** - PySide6 widgets grouped by feature (invoices, accounting,
+- **UI (Views)** – PySide6 widgets grouped by feature (invoices, accounting,
   inventory, payroll, banking, settings).
-- **Controllers** - Business logic, orchestrating services and updating views.
-- **Services** - Low-level operations (database, encryption, backup, reporting,
+- **Controllers** – Business logic, orchestrating services and updating views.
+- **Services** – Low-level operations (database, encryption, backup, reporting,
   OCR, bank feeds).
-- **Models** - Business entities (Account, Transaction, Invoice, etc.).
-- **Qt Data Models** - Table/tree models that feed data to views.
+- **Models** – Business entities (Account, Transaction, Invoice, etc.).
+- **Qt Data Models** – Table/tree models that feed data to views.
 
 When adding a new feature, follow the structure outlined in `STRUCTURE.md`.
 
@@ -188,7 +188,7 @@ Example:
 Branching
 ---------
 
-- ``main`` - stable, release-ready branch. All changes come via pull requests.
+- ``main`` – stable, release-ready branch. All changes come via pull requests.
 - Feature branches: name as ``feature/short-description`` or ``fix/issue-number``.
 
 Pull Requests
