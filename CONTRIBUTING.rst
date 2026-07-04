@@ -3,14 +3,14 @@ Contributing to AccounterPro
 ===============================
 
 Thank you for your interest in contributing to **AccounterPro** – the free
-open-source accounting software for small businesses. We welcome
+open‑source accounting software for small businesses[reference:4]. We welcome
 contributions of all kinds: code, documentation, bug reports, design ideas, and
 translations.
 
 Please read this guide carefully. It explains our standards and processes, and
 points you to the existing architecture documentation for details.
 
-----
+---
 
 Table of Contents
 =================
@@ -27,7 +27,7 @@ Table of Contents
 10. `Licensing & DCO <#licensing--dco>`_
 11. `Need Help? <#need-help>`_
 
-----
+---
 
 Code of Conduct
 ===============
@@ -36,7 +36,7 @@ We are committed to providing a friendly, safe, and welcoming environment for
 all contributors. Please read and follow our full `Code of Conduct
 <CODE_OF_CONDUCT.rst>`_. By participating, you agree to abide by its terms.
 
-----
+---
 
 Getting Started
 ===============
@@ -49,21 +49,21 @@ If you are new to the project:
 4. Look for issues labelled **good first issue** or **help wanted** in the
    `issue tracker <https://github.com/Vahrka/Accounting-Software/issues>`_.
 
-----
+---
 
 Project Architecture
 ====================
 
-The software follows a **Model-View-Controller (MVC)** pattern, built with
-**PySide6** for native cross-platform performance. The full architecture
+The software follows a **Model‑View‑Controller (MVC)** pattern, built with
+**PySide6** for native cross‑platform performance[reference:5]. The full architecture
 is documented in the following files, available in the ``STRUCTURE/`` folder of
-the repository:
+the repository[reference:6][reference:7]:
 
 - **`STRUCTURE/STRUCTURE.mermaid`** – Complete class diagram covering all
   models, controllers, services, and UI views (core accounting, business
   management, technical layers, and security).
 - **`STRUCTURE/VIEW/VIEWS.mermaid`** – Detailed UI view hierarchy, showing all
-  pages, sub-views, and their relationships.
+  pages, sub‑views, and their relationships.
 - **`STRUCTURE/STRUCTURE.md`** – Recommended folder structure and organisation
   of the source code.
 - **`STRUCTURE/recommended.md`** – Additional guidance on project layout.
@@ -74,14 +74,14 @@ The key layers are:
 - **UI (Views)** – PySide6 widgets grouped by feature (invoices, accounting,
   inventory, payroll, banking, settings).
 - **Controllers** – Business logic, orchestrating services and updating views.
-- **Services** – Low-level operations (database, encryption, backup, reporting,
+- **Services** – Low‑level operations (database, encryption, backup, reporting,
   OCR, bank feeds).
 - **Models** – Business entities (Account, Transaction, Invoice, etc.).
 - **Qt Data Models** – Table/tree models that feed data to views.
 
 When adding a new feature, follow the structure outlined in `STRUCTURE.md`.
 
-----
+---
 
 Development Environment
 =======================
@@ -130,7 +130,7 @@ Database
 By default, SQLite is used. To test with PostgreSQL, adjust the configuration
 accordingly.
 
-----
+---
 
 Coding Standards
 ================
@@ -143,7 +143,7 @@ Coding Standards
   and functions.
 - **Qt/PySide6**: Class names in ``CamelCase``; slot methods prefixed with
   ``on_``. Keep UI layout separate from business logic.
-- **Imports**: Group as: standard library, third-party, local modules.
+- **Imports**: Group as: standard library, third‑party, local modules.
 - **Line length**: 88 characters (black default).
 
 Also run `isort`_ to sort imports: ``isort .``.
@@ -152,7 +152,7 @@ Also run `isort`_ to sort imports: ``isort .``.
 .. _black: https://black.readthedocs.io/
 .. _isort: https://pycqa.github.io/isort/
 
-----
+---
 
 Commit & Pull Request Guidelines
 ================================
@@ -179,7 +179,7 @@ Example:
    feat(invoices): add OCR scanning for receipts
 
    Implemented receipt scanning using Tesseract. Added ReceiptScanView
-   and integrated with InvoiceController to auto-match scanned receipts.
+   and integrated with InvoiceController to auto‑match scanned receipts.
 
    Closes #123
 
@@ -188,7 +188,7 @@ Example:
 Branching
 ---------
 
-- ``main`` – stable, release-ready branch. All changes come via pull requests.
+- ``main`` – stable, release‑ready branch. All changes come via pull requests.
 - Feature branches: name as ``feature/short-description`` or ``fix/issue-number``.
 
 Pull Requests
@@ -200,7 +200,7 @@ Pull Requests
 4. Request review from at least one maintainer.
 5. After approval, a maintainer will merge your PR.
 
-----
+---
 
 Testing
 =======
@@ -222,7 +222,7 @@ Write tests that are clear, maintainable, and cover edge cases.
 .. _pytest: https://docs.pytest.org/
 .. _pytest-qt: https://pytest-qt.readthedocs.io/
 
-----
+---
 
 Documentation
 =============
@@ -234,7 +234,7 @@ Documentation
 
 When you add or change a feature, update the relevant documentation.
 
-----
+---
 
 Reporting Issues
 ================
@@ -248,12 +248,12 @@ to report bugs or request features. Please include:
 - Screenshots or logs if applicable.
 - Environment details (OS, Python version, database type, etc.).
 
-----
+---
 
 Licensing & DCO
 ===============
 
-This project is licensed under **strict open-source terms**. By
+This project is licensed under **strict open‑source terms**[reference:8]. By
 contributing, you agree that your contributions will be licensed under the same
 terms.
 
@@ -262,7 +262,7 @@ Each commit must include a ``Signed-off-by`` line (you can use ``git commit -s``
 This certifies that you have the right to submit the contribution and agree to
 the DCO terms (see `DCO 1.1 <https://developercertificate.org/>`_).
 
-----
+---
 
 Need Help?
 ==========
