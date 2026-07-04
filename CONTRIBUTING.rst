@@ -10,7 +10,7 @@ translations.
 Please read this guide carefully. It explains our standards and processes, and
 points you to the existing architecture documentation for details.
 
----
+----
 
 Table of Contents
 =================
@@ -27,7 +27,7 @@ Table of Contents
 10. `Licensing & DCO <#licensing--dco>`_
 11. `Need Help? <#need-help>`_
 
----
+----
 
 Code of Conduct
 ===============
@@ -36,7 +36,7 @@ We are committed to providing a friendly, safe, and welcoming environment for
 all contributors. Please read and follow our full `Code of Conduct
 <CODE_OF_CONDUCT.rst>`_. By participating, you agree to abide by its terms.
 
----
+----
 
 Getting Started
 ===============
@@ -49,7 +49,7 @@ If you are new to the project:
 4. Look for issues labelled **good first issue** or **help wanted** in the
    `issue tracker <https://github.com/Vahrka/Accounting-Software/issues>`_.
 
----
+----
 
 Project Architecture
 ====================
@@ -81,7 +81,7 @@ The key layers are:
 
 When adding a new feature, follow the structure outlined in `STRUCTURE.md`.
 
----
+----
 
 Development Environment
 =======================
@@ -130,7 +130,7 @@ Database
 By default, SQLite is used. To test with PostgreSQL, adjust the configuration
 accordingly.
 
----
+----
 
 Coding Standards
 ================
@@ -152,7 +152,7 @@ Also run `isort`_ to sort imports: ``isort .``.
 .. _black: https://black.readthedocs.io/
 .. _isort: https://pycqa.github.io/isort/
 
----
+----
 
 Commit & Pull Request Guidelines
 ================================
@@ -200,7 +200,7 @@ Pull Requests
 4. Request review from at least one maintainer.
 5. After approval, a maintainer will merge your PR.
 
----
+----
 
 Testing
 =======
@@ -222,7 +222,7 @@ Write tests that are clear, maintainable, and cover edge cases.
 .. _pytest: https://docs.pytest.org/
 .. _pytest-qt: https://pytest-qt.readthedocs.io/
 
----
+----
 
 Documentation
 =============
@@ -234,7 +234,7 @@ Documentation
 
 When you add or change a feature, update the relevant documentation.
 
----
+----
 
 Reporting Issues
 ================
@@ -248,7 +248,7 @@ to report bugs or request features. Please include:
 - Screenshots or logs if applicable.
 - Environment details (OS, Python version, database type, etc.).
 
----
+----
 
 Licensing & DCO
 ===============
@@ -262,7 +262,7 @@ Each commit must include a ``Signed-off-by`` line (you can use ``git commit -s``
 This certifies that you have the right to submit the contribution and agree to
 the DCO terms (see `DCO 1.1 <https://developercertificate.org/>`_).
 
----
+----
 
 Need Help?
 ==========
