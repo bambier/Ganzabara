@@ -64,13 +64,13 @@ When adding new functionality:
 - avoid mixing UI logic with business logic
 - avoid putting unrelated utilities into existing files
 
-Please review the project structure inside the `STRUCTURE/` directory before making architectural changes [See Here] (https://github.com/bambier/Accounting-Software/tree/main/STRUCTURE).
+Please review the project structure inside the `STRUCTURE/` directory before making architectural changes [See Here](https://github.com/bambier/Accounting-Software/tree/main/STRUCTURE).
 
 ---
 
 # Directory Organization
 
-New code should follow the architectural guidelines documented in [See Here] (https://github.com/bambier/Accounting-Software/tree/main/STRUCTURE):
+New code should follow the architectural guidelines documented in [See Here](https://github.com/bambier/Accounting-Software/tree/main/STRUCTURE):
 
 ```
 STRUCTURE/
