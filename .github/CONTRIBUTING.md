@@ -15,6 +15,8 @@ Please be respectful and professional when interacting with other contributors.
 Constructive criticism is welcome.
 Personal attacks, harassment, discrimination, or hostile behavior will not be tolerated.
 
+For more info see [here]().
+
 ---
 
 # Before You Start
@@ -64,13 +66,13 @@ When adding new functionality:
 - avoid mixing UI logic with business logic
 - avoid putting unrelated utilities into existing files
 
-Please review the project structure inside the `STRUCTURE/` directory before making architectural changes [See Here](https://github.com/bambier/Accounting-Software/tree/main/STRUCTURE).
+Please review the project structure inside the `STRUCTURE/` directory before making architectural changes [See Here](/STRUCTURE).
 
 ---
 
 # Directory Organization
 
-New code should follow the architectural guidelines documented in [See Here](https://github.com/bambier/Accounting-Software/tree/main/STRUCTURE):
+New code should follow the architectural guidelines documented in [See Here](/STRUCTURE):
 
 ```
 STRUCTURE/
