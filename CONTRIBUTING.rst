@@ -1,275 +1,292 @@
-===============================
-Contributing to AccounterPro
-===============================
+# Contributing to AccounterPro
 
-Thank you for your interest in contributing to **AccounterPro** – the free
-open‑source accounting software for small businesses[reference:4]. We welcome
-contributions of all kinds: code, documentation, bug reports, design ideas, and
-translations.
+First, thank you for considering contributing to AccounterPro.
 
-Please read this guide carefully. It explains our standards and processes, and
-points you to the existing architecture documentation for details.
+Our goal is to build a clean, maintainable, cross-platform accounting application with a modular architecture, high code quality, and long-term maintainability.
+
+Whether you are fixing bugs, improving documentation, adding features, or reviewing pull requests, your contributions are appreciated.
 
 ---
 
-Table of Contents
-=================
+# Code of Conduct
 
-1. `Code of Conduct <#code-of-conduct>`_
-2. `Getting Started <#getting-started>`_
-3. `Project Architecture <#project-architecture>`_
-4. `Development Environment <#development-environment>`_
-5. `Coding Standards <#coding-standards>`_
-6. `Commit & Pull Request Guidelines <#commit--pull-request-guidelines>`_
-7. `Testing <#testing>`_
-8. `Documentation <#documentation>`_
-9. `Reporting Issues <#reporting-issues>`_
-10. `Licensing & DCO <#licensing--dco>`_
-11. `Need Help? <#need-help>`_
+Please be respectful and professional when interacting with other contributors.
+
+Constructive criticism is welcome.
+Personal attacks, harassment, discrimination, or hostile behavior will not be tolerated.
 
 ---
 
-Code of Conduct
-===============
+# Before You Start
 
-We are committed to providing a friendly, safe, and welcoming environment for
-all contributors. Please read and follow our full `Code of Conduct
-<CODE_OF_CONDUCT.rst>`_. By participating, you agree to abide by its terms.
+Before beginning significant work:
 
----
-
-Getting Started
-===============
-
-If you are new to the project:
-
-1. **Fork** the repository and **clone** your fork locally.
-2. Set up your development environment (see `Development Environment`_).
-3. Run the application to verify everything works.
-4. Look for issues labelled **good first issue** or **help wanted** in the
-   `issue tracker <https://github.com/Vahrka/Accounting-Software/issues>`_.
+- Search existing Issues to avoid duplicate work.
+- Open an Issue to discuss large features before implementing them.
+- Keep pull requests focused on a single change whenever possible.
 
 ---
 
-Project Architecture
-====================
+# Development Philosophy
 
-The software follows a **Model‑View‑Controller (MVC)** pattern, built with
-**PySide6** for native cross‑platform performance[reference:5]. The full architecture
-is documented in the following files, available in the ``STRUCTURE/`` folder of
-the repository[reference:6][reference:7]:
+We prioritize:
 
-- **`STRUCTURE/STRUCTURE.mermaid`** – Complete class diagram covering all
-  models, controllers, services, and UI views (core accounting, business
-  management, technical layers, and security).
-- **`STRUCTURE/VIEW/VIEWS.mermaid`** – Detailed UI view hierarchy, showing all
-  pages, sub‑views, and their relationships.
-- **`STRUCTURE/STRUCTURE.md`** – Recommended folder structure and organisation
-  of the source code.
-- **`STRUCTURE/recommended.md`** – Additional guidance on project layout.
+- Readable code over clever code
+- Simplicity over unnecessary abstraction
+- Modular design
+- Long-term maintainability
+- Consistent architecture
+- Cross-platform compatibility
 
-Please refer to these files for a comprehensive understanding of the codebase.
-The key layers are:
-
-- **UI (Views)** – PySide6 widgets grouped by feature (invoices, accounting,
-  inventory, payroll, banking, settings).
-- **Controllers** – Business logic, orchestrating services and updating views.
-- **Services** – Low‑level operations (database, encryption, backup, reporting,
-  OCR, bank feeds).
-- **Models** – Business entities (Account, Transaction, Invoice, etc.).
-- **Qt Data Models** – Table/tree models that feed data to views.
-
-When adding a new feature, follow the structure outlined in `STRUCTURE.md`.
+Every contribution should improve the project without increasing unnecessary complexity.
 
 ---
 
-Development Environment
-=======================
+# Project Architecture
 
-Prerequisites
--------------
+The project follows a modular architecture.
 
-- Python 3.10 or higher
-- `pip` and `virtualenv` (or `venv`)
-- Git
-- Optional: `Tesseract <https://github.com/tesseract-ocr/tesseract>`_ (for OCR)
-- Optional: PostgreSQL (for testing the PostgreSQL backend)
+Each component has a single responsibility.
 
-Setup
------
+Examples include:
 
-1. Clone the repository:
+- GUI
+- Core
+- Database
+- Plugins
+- Utilities
+- Resources
 
-   .. code-block:: bash
+When adding new functionality:
 
-      git clone https://github.com/Vahrka/Accounting-Software
-      cd Accounting-Software
+- place code in the correct module
+- avoid circular imports
+- avoid mixing UI logic with business logic
+- avoid putting unrelated utilities into existing files
 
-2. Create and activate a virtual environment:
-
-   .. code-block:: bash
-
-      python -m venv venv
-      source venv/bin/activate   # On Windows: venv\Scripts\activate
-
-3. Install dependencies:
-
-   .. code-block:: bash
-
-      pip install -r requirements.txt
-
-4. Run the application:
-
-   .. code-block:: bash
-
-      python3 main.py
-
-Database
---------
-
-By default, SQLite is used. To test with PostgreSQL, adjust the configuration
-accordingly.
+Please review the project structure inside the `STRUCTURE/` directory before making architectural changes.
 
 ---
 
-Coding Standards
-================
+# Directory Organization
 
-- **Python**: Follow `PEP 8`_. Use `black`_ for formatting (default settings).
-  Run ``black .`` before committing.
-- **Type Hints**: All function and method signatures **must** include type
-  hints.
-- **Docstrings**: Use Google style docstrings for all public modules, classes,
-  and functions.
-- **Qt/PySide6**: Class names in ``CamelCase``; slot methods prefixed with
-  ``on_``. Keep UI layout separate from business logic.
-- **Imports**: Group as: standard library, third‑party, local modules.
-- **Line length**: 88 characters (black default).
+New code should follow the architectural guidelines documented in:
 
-Also run `isort`_ to sort imports: ``isort .``.
+```
+STRUCTURE/
+```
 
-.. _PEP 8: https://peps.python.org/pep-0008/
-.. _black: https://black.readthedocs.io/
-.. _isort: https://pycqa.github.io/isort/
+including:
+
+- STRUCTURE.mermaid
+- VIEW/
+- recommended.md
+
+These documents describe the intended long-term organization of the project.
+
+If your contribution requires architectural changes, please discuss them in an Issue first.
 
 ---
 
-Commit & Pull Request Guidelines
-================================
+# Coding Style
 
-Commit Messages
----------------
+## Python
 
-We use `Conventional Commits`_. Format:
+Follow:
 
-.. code-block::
-
-   <type>(<scope>): <subject>
-   <BLANK LINE>
-   <body>
-   <BLANK LINE>
-   <footer>
-
-Common types: ``feat``, ``fix``, ``docs``, ``style``, ``refactor``, ``test``, ``chore``.
+- PEP 8
+- PEP 257
+- Type hints whenever practical
 
 Example:
 
-.. code-block::
+```python
+def load_plugin(path: Path) -> Plugin:
+    ...
+```
 
-   feat(invoices): add OCR scanning for receipts
+Avoid:
 
-   Implemented receipt scanning using Tesseract. Added ReceiptScanView
-   and integrated with InvoiceController to auto‑match scanned receipts.
+- unnecessary global variables
+- deeply nested logic
+- duplicated code
+- wildcard imports
 
-   Closes #123
+Prefer:
 
-.. _Conventional Commits: https://www.conventionalcommits.org/
-
-Branching
----------
-
-- ``main`` – stable, release‑ready branch. All changes come via pull requests.
-- Feature branches: name as ``feature/short-description`` or ``fix/issue-number``.
-
-Pull Requests
--------------
-
-1. Open a pull request against ``main``.
-2. Fill out the PR template (provided in the repository).
-3. Ensure all CI checks pass (linting, tests, build).
-4. Request review from at least one maintainer.
-5. After approval, a maintainer will merge your PR.
+- descriptive names
+- small functions
+- reusable components
+- explicit imports
 
 ---
 
-Testing
-=======
+# GUI Guidelines
 
-We use `pytest`_ for testing. All new features must include tests.
+The application is built with PySide6.
 
-- Unit tests: under ``tests/unit/``.
-- Integration tests: under ``tests/integration/``.
-- UI tests: under ``tests/ui/`` (using `pytest-qt`_).
+GUI code should:
 
-Run the full suite with:
+- remain responsive
+- separate presentation from business logic
+- avoid blocking the UI thread
+- avoid embedding database logic directly inside widgets
 
-.. code-block:: bash
-
-   pytest
-
-Write tests that are clear, maintainable, and cover edge cases.
-
-.. _pytest: https://docs.pytest.org/
-.. _pytest-qt: https://pytest-qt.readthedocs.io/
+Business operations should be delegated to the appropriate backend components.
 
 ---
 
-Documentation
-=============
+# Database Changes
 
-- **Code**: Inline docstrings (Google style) for all public APIs.
-- **User Guide**: We maintain a separate user manual in the ``docs/`` folder.
-- **Architecture**: See the files mentioned in `Project Architecture`_.
-- **README**: Keep the top-level README up-to-date with setup and basic usage.
+If your contribution modifies the database:
 
-When you add or change a feature, update the relevant documentation.
-
----
-
-Reporting Issues
-================
-
-Use the `GitHub issue tracker <https://github.com/Vahrka/Accounting-Software/issues>`_
-to report bugs or request features. Please include:
-
-- A clear and descriptive title.
-- Steps to reproduce the issue.
-- Expected and actual behaviour.
-- Screenshots or logs if applicable.
-- Environment details (OS, Python version, database type, etc.).
+- maintain backward compatibility whenever possible
+- document schema changes
+- keep models consistent
+- avoid breaking existing installations
 
 ---
 
-Licensing & DCO
-===============
+# Plugin System
 
-This project is licensed under **strict open‑source terms**[reference:8]. By
-contributing, you agree that your contributions will be licensed under the same
-terms.
+The project contains a plugin framework.
 
-We require a **Developer Certificate of Origin (DCO)** for all contributions.
-Each commit must include a ``Signed-off-by`` line (you can use ``git commit -s``).
-This certifies that you have the right to submit the contribution and agree to
-the DCO terms (see `DCO 1.1 <https://developercertificate.org/>`_).
+Plugin contributions should:
+
+- inherit from the provided base classes
+- follow the plugin template
+- avoid modifying the plugin loader unnecessarily
+
+New plugins should remain independent of core functionality whenever possible.
 
 ---
 
-Need Help?
-==========
+# Documentation
 
-If you have any questions or need guidance, feel free to:
+Documentation improvements are always welcome.
 
-- Open a discussion on the `GitHub Discussions <https://github.com/Vahrka/Accounting-Software/discussions>`_ page.
-- Reach out to the maintainers via the repository.
+Please update documentation whenever you:
 
-We look forward to your contributions!
+- introduce new features
+- rename components
+- modify architecture
+- change public APIs
+
+Good documentation is considered part of the contribution.
+
+---
+
+# Commit Messages
+
+Write clear commit messages.
+
+Good:
+
+```
+Add invoice filtering by customer
+```
+
+Good:
+
+```
+Fix plugin loading on Windows
+```
+
+Avoid:
+
+```
+update
+```
+
+```
+fix stuff
+```
+
+```
+changes
+```
+
+---
+
+# Pull Requests
+
+Before opening a Pull Request:
+
+- ensure the application starts successfully
+- remove debugging code
+- remove unused imports
+- update documentation if needed
+- keep the PR focused on a single topic
+
+A good pull request explains:
+
+- what changed
+- why it changed
+- any limitations
+- screenshots (for UI changes)
+
+---
+
+# Feature Requests
+
+Feature requests are welcome.
+
+Please explain:
+
+- the problem
+- the proposed solution
+- possible alternatives
+- expected user benefit
+
+---
+
+# Bug Reports
+
+Include as much information as possible:
+
+- operating system
+- Python version
+- application version
+- reproduction steps
+- expected behavior
+- actual behavior
+- screenshots (if applicable)
+- traceback (if available)
+
+---
+
+# What We're Looking For
+
+Contributions are especially welcome in:
+
+- Accounting features
+- Reporting
+- Inventory management
+- Payroll
+- Banking
+- OCR improvements
+- Plugin ecosystem
+- Performance optimization
+- UI/UX improvements
+- Documentation
+- Testing
+- Localization
+- Accessibility
+
+---
+
+# License
+
+By contributing to this repository, you agree that your contributions are licensed under the same license as the project.
+
+You confirm that you have the legal right to submit the contributed code.
+
+---
+
+# Questions
+
+If you are unsure whether something belongs in the project, please open an Issue before investing significant development time.
+
+We would rather discuss a proposal early than reject a large pull request later.
+
+Thank you for helping improve AccounterPro.
