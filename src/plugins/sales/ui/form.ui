@@ -40,9 +40,9 @@
        <property name="geometry">
         <rect>
          <x>0</x>
-         <y>0</y>
+         <y>-66</y>
          <width>1079</width>
-         <height>921</height>
+         <height>859</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="scrollarea_qwidget_layout">
@@ -53,6 +53,9 @@
          <number>0</number>
         </property>
         <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item alignment="Qt::AlignmentFlag::AlignTop">
@@ -599,28 +602,6 @@
                  <enum>QAbstractItemView::SelectionBehavior::SelectRows</enum>
                 </property>
                 <property name="sortingEnabled">
-                 <bool>true</bool>
-                </property>
-               </widget>
-              </item>
-             </layout>
-            </widget>
-           </item>
-           <item alignment="Qt::AlignmentFlag::AlignTop">
-            <widget class="QWidget" name="frame_advanced" native="true">
-             <layout class="QVBoxLayout" name="frame_advanced_layout">
-              <item>
-               <widget class="QLabel" name="label_advanced">
-                <property name="font">
-                 <font>
-                  <pointsize>18</pointsize>
-                  <bold>true</bold>
-                 </font>
-                </property>
-                <property name="text">
-                 <string>Advanced</string>
-                </property>
-                <property name="wordWrap">
                  <bool>true</bool>
                 </property>
                </widget>

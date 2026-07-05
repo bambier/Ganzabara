@@ -40,10 +40,10 @@ class Ui_Form(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollarea_qwidget = QWidget()
         self.scrollarea_qwidget.setObjectName(u"scrollarea_qwidget")
-        self.scrollarea_qwidget.setGeometry(QRect(0, 0, 1079, 921))
+        self.scrollarea_qwidget.setGeometry(QRect(0, -66, 1079, 859))
         self.scrollarea_qwidget_layout = QVBoxLayout(self.scrollarea_qwidget)
         self.scrollarea_qwidget_layout.setObjectName(u"scrollarea_qwidget_layout")
-        self.scrollarea_qwidget_layout.setContentsMargins(0, 0, 0, -1)
+        self.scrollarea_qwidget_layout.setContentsMargins(0, 0, 0, 0)
         self.frame = QWidget(self.scrollarea_qwidget)
         self.frame.setObjectName(u"frame")
         self.frame_verticalLayout = QVBoxLayout(self.frame)
@@ -367,20 +367,6 @@ class Ui_Form(object):
 
         self.frame_verticalLayout.addWidget(self.frame_billing)
 
-        self.frame_advanced = QWidget(self.frame)
-        self.frame_advanced.setObjectName(u"frame_advanced")
-        self.frame_advanced_layout = QVBoxLayout(self.frame_advanced)
-        self.frame_advanced_layout.setObjectName(u"frame_advanced_layout")
-        self.label_advanced = QLabel(self.frame_advanced)
-        self.label_advanced.setObjectName(u"label_advanced")
-        self.label_advanced.setFont(font)
-        self.label_advanced.setWordWrap(True)
-
-        self.frame_advanced_layout.addWidget(self.label_advanced)
-
-
-        self.frame_verticalLayout.addWidget(self.frame_advanced, 0, Qt.AlignmentFlag.AlignTop)
-
 
         self.scrollarea_qwidget_layout.addWidget(self.frame, 0, Qt.AlignmentFlag.AlignTop)
 
@@ -427,7 +413,6 @@ class Ui_Form(object):
         self.count_input.setPlaceholderText(QCoreApplication.translate("Form", u"Count", None))
         self.add_to_record_btn.setText(QCoreApplication.translate("Form", u"Add to record", None))
         self.add_to_record_btn.setProperty(u"class", QCoreApplication.translate("Form", u"primary outlined", None))
-        self.label_advanced.setText(QCoreApplication.translate("Form", u"Advanced", None))
         Form.setTabText(Form.indexOf(self.Invoices), QCoreApplication.translate("Form", u"Page", None))
         Form.setTabText(Form.indexOf(self.Customers), QCoreApplication.translate("Form", u"Page", None))
         pass
