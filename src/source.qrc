@@ -1,0 +1,55 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/theme/qtquickcontrols2.conf</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file alias="Vazirmatn-RD-UI-FD-Black">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Black.ttf</file>
+        <file alias="Vazirmatn-RD-UI-FD-Bold">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Bold.ttf</file>
+        <file alias="Vazirmatn-RD-UI-FD-ExtraBold">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-ExtraBold.ttf</file>
+        <file alias="Vazirmatn-RD-UI-FD-ExtraLight">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-ExtraLight.ttf</file>
+        <file alias="Vazirmatn-RD-UI-FD-Light">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Light.ttf</file>
+        <file alias="Vazirmatn-RD-UI-FD-Medium">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Medium.ttf</file>
+        <file alias="Vazirmatn-RD-UI-FD-Regular">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Regular.ttf</file>
+        <file alias="Vazirmatn-RD-UI-FD-SemiBold">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-SemiBold.ttf</file>
+        <file alias="Vazirmatn-RD-UI-FD-Thin">resources/fonts/vazirmatn/Vazirmatn-RD-UI-FD-Thin.ttf</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file alias="dropdown-arrow.png">resources/icons/png/dropdown-arrow-svgrepo-com.png</file>
+        <file alias="chart.svg">resources/icons/svg/chart-mixed-svgrepo-com.svg</file>
+        <file alias="contact-phonebook-support.svg">resources/icons/svg/contact-phonebook-support-svgrepo-com.svg</file>
+        <file alias="dashboard.svg">resources/icons/svg/dashboard-svgrepo-com.svg</file>
+        <file alias="data.svg">resources/icons/svg/data-svgrepo-com.svg</file>
+        <file alias="delete-2.svg">resources/icons/svg/delete-2-svgrepo-com.svg</file>
+        <file alias="document.svg">resources/icons/svg/document-duplication-svgrepo-com.svg</file>
+        <file alias="down-2-svgrepo-com.svg">resources/icons/svg/down-2-svgrepo-com.svg</file>
+        <file alias="dropdown-arrow.svg">resources/icons/svg/dropdown-arrow-svgrepo-com.svg</file>
+        <file alias="export.svg">resources/icons/svg/export-svgrepo-com.svg</file>
+        <file alias="file-question-alt.svg">resources/icons/svg/file-question-alt-svgrepo-com.svg</file>
+        <file alias="help.svg">resources/icons/svg/help-svgrepo-com.svg</file>
+        <file alias="import.svg">resources/icons/svg/import-svgrepo-com.svg</file>
+        <file alias="info-square.svg">resources/icons/svg/info-square-svgrepo-com.svg</file>
+        <file alias="list.svg">resources/icons/svg/list-1-svgrepo-com.svg</file>
+        <file alias="plugin-2.svg">resources/icons/svg/plugin-2-svgrepo-com.svg</file>
+        <file alias="preferences.svg">resources/icons/svg/preferences-svgrepo-com.svg</file>
+        <file alias="register.svg">resources/icons/svg/register-svgrepo-com.svg</file>
+        <file alias="right-arrow-alt.svg">resources/icons/svg/right-arrow-alt-svgrepo-com.svg</file>
+        <file alias="save-storage-file-documentEEBE">resources/icons/svg/save-storage-file-document-EEEBE1-page-svgrepo.svg</file>
+        <file alias="save-storage-file-document">resources/icons/svg/save-storage-file-document-page-svgrepo-com.svg</file>
+        <file alias="settings.svg">resources/icons/svg/settings-svgrepo-com.svg</file>
+        <file alias="table.svg">resources/icons/svg/table-svgrepo-com.svg</file>
+        <file alias="up-2-svgrepo-com.svg">resources/icons/svg/up-2-svgrepo-com.svg</file>
+    </qresource>
+    <qresource prefix="/img-icon">
+        <file alias="app-ico">resources/images/icon.ico</file>
+        <file alias="icon">resources/images/icon.png</file>
+    </qresource>
+    <qresource prefix="/locales">
+        <file alias="en">resources/locales/qm/en.qm</file>
+        <file alias="fa">resources/locales/qm/fa.qm</file>
+    </qresource>
+    <qresource prefix="/styles">
+        <file alias="dark-style">resources/theme/dark.qss</file>
+        <file alias="light-style">resources/theme/light.qss</file>
+        <file alias="default-style">resources/theme/styles.qss</file>
+    </qresource>
+</RCC>

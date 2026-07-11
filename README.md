@@ -23,7 +23,7 @@
 - Remove license terms
 
 💼 **Commercial Licensing**
-Contact Bambier for:
+Contact Vahrka for:
 
 - White-label solutions
 - Enterprise deployments
@@ -57,7 +57,7 @@ Contact Bambier for:
 ### Basic Setup
 
 ```bash
-git clone https://github.com/bambier/Accounting-Software
+git clone https://github.com/Vahrka/Accounting-Software
 cd Accounting-Software
 pip install -r requirements.txt
 python3 main.py
@@ -65,4 +65,4 @@ python3 main.py
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=bambier/Accounting-Software&type=Date)](https://www.star-history.com/#bambier/Accounting-Software&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=Vahrka/Accounting-Software&type=Date)](https://www.star-history.com/#Vahrka/Accounting-Software&Date)
