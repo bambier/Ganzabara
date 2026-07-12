@@ -1,51 +1,83 @@
-name: Build Android
+name: Deploy Android
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Set up Android SDK and NDK
-        uses: android-actions/setup-android@v3
-        with:
-          cmdline-tools-version: latest
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            openjdk-17-jdk \
+            unzip \
+            zip \
+            libz-dev \
+            libncurses5 \
+            libncursesw5 \
+            autoconf \
+            automake \
+            libtool \
+            cmake \
+            ccache \
+            git \
+            wget
 
       - name: Set up Python 3.14
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: '3.14'
+          cache: 'pip'
 
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install buildozer==1.5.0 cython==0.29.33 jinja2
 
-      - name: Build Android APK
-        run: pyside6-android-deploy --config-file pysidedeploy.spec
+      - name: Install Android SDK & NDK
+        run: |
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
+          unzip -q commandlinetools-linux-*.zip
+          mkdir -p android-sdk/cmdline-tools
+          mv cmdline-tools android-sdk/cmdline-tools/latest
+          export ANDROID_SDK_ROOT=$PWD/android-sdk
+          export ANDROID_HOME=$PWD/android-sdk
+          export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
+          sdkmanager "ndk;25.2.9519653"
+
+      - name: Run pyside6-android-deploy
         env:
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
-          ANDROID_NDK_HOME: ${{ env.ANDROID_NDK_HOME }}
+          ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
+          ANDROID_HOME: ${{ github.workspace }}/android-sdk
+          GANZABARA_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          GANZABARA_ANDROID_KEYALIAS_PASSWORD: ${{ secrets.ANDROID_KEYALIAS_PASSWORD }}
+        run: |
+          pyside6-android-deploy -c pysidedeploy.spec
 
-      - name: Upload Android artifact
+      - name: Find and upload APK/AAB
+        run: |
+          find ./src -name "*.apk" -o -name "*.aab" | head -1 | xargs -I {} cp {} ./ganzabara-android.apk 2>/dev/null || echo "No APK/AAB found"
+        continue-on-error: true
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: android-build
+          name: ganzabara-android
           path: |
-            *.apk
-            *.aab
+            ./src/*.apk
+            ./src/*.aab
+            ./src/bin/
+          retention-days: 30
