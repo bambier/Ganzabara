@@ -58,12 +58,15 @@ jobs:
           git clone --depth 1 https://code.qt.io/pyside/pyside-setup
           python pyside-setup/tools/cross_compile_android/main.py --download-only --skip-update --auto-accept-license
 
-      - name: Verify downloaded PySide6 wheels
+      - name: Locate downloaded PySide6 wheels
+        id: find_wheels
         run: |
-          echo "Contents of ~/.pyside6-android-deploy:"
-          ls -la ~/.pyside6-android-deploy/ || echo "Directory not found"
-          echo "Searching for wheels..."
-          find ~/.pyside6-android-deploy -name "*.whl" || echo "No wheels found"
+          PYSIDE_WHEEL=$(find ~/.pyside6-android-deploy -name "PySide6-*.whl" | head -1)
+          SHIBOKEN_WHEEL=$(find ~/.pyside6-android-deploy -name "shiboken6-*.whl" | head -1)
+          echo "PYSIDE_WHEEL=$PYSIDE_WHEEL" >> $GITHUB_OUTPUT
+          echo "SHIBOKEN_WHEEL=$SHIBOKEN_WHEEL" >> $GITHUB_OUTPUT
+          echo "Found PySide wheel: $PYSIDE_WHEEL"
+          echo "Found Shiboken wheel: $SHIBOKEN_WHEEL"
 
       - name: Copy main.py to root and fix spec file
         run: |
@@ -76,10 +79,14 @@ jobs:
 
       - name: Run pyside6-android-deploy
         env:
+          ANDROID_NDK_ROOT: /home/runner/.pyside6-android-deploy/ndk
+          ANDROID_SDK_ROOT: /home/runner/.pyside6-android-deploy/sdk
           GANZABARA_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           GANZABARA_ANDROID_KEYALIAS_PASSWORD: ${{ secrets.ANDROID_KEYALIAS_PASSWORD }}
         run: |
-          pyside6-android-deploy -c pysidedeploy.spec --force
+          pyside6-android-deploy -c pysidedeploy.spec --force \
+            --wheel-pyside "${{ steps.find_wheels.outputs.PYSIDE_WHEEL }}" \
+            --wheel-shiboken "${{ steps.find_wheels.outputs.SHIBOKEN_WHEEL }}"
 
       - name: Debug - List files
         run: |
