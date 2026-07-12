@@ -65,19 +65,29 @@ jobs:
           GANZABARA_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           GANZABARA_ANDROID_KEYALIAS_PASSWORD: ${{ secrets.ANDROID_KEYALIAS_PASSWORD }}
         run: |
-          pyside6-android-deploy -c pysidedeploy.spec --force || true
+          pyside6-android-deploy -c pysidedeploy.spec --force
 
-      - name: Find and upload APK/AAB
+      - name: Debug - List all files in src directory
         run: |
-          find ./src -name "*.apk" -o -name "*.aab" | head -1 | xargs -I {} cp {} ./ganzabara-android.apk 2>/dev/null || echo "No APK/AAB found"
-        continue-on-error: true
+          echo "=== Contents of ./src ==="
+          ls -la ./src/ || echo "src directory not found"
+          echo "=== Contents of ./src/bin ==="
+          ls -la ./src/bin/ 2>/dev/null || echo "bin directory not found"
+          echo "=== Contents of ./src/.buildozer ==="
+          ls -la ./src/.buildozer/ 2>/dev/null || echo ".buildozer directory not found"
+          echo "=== Searching for APK/AAB files ==="
+          find ./src -name "*.apk" -o -name "*.aab" 2>/dev/null || echo "No APK/AAB found"
 
-      - name: Upload artifact
+      - name: Upload APK/AAB artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ganzabara-android
           path: |
             ./src/*.apk
             ./src/*.aab
-            ./src/bin/
+            ./src/bin/*.apk
+            ./src/bin/*.aab
+            ./src/.buildozer/*.apk
+            ./src/.buildozer/*.aab
           retention-days: 30
+        continue-on-error: true
