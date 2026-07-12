@@ -4,7 +4,7 @@ name: Deploy Android
 on:
   push:
     tags:
-      - "v*"
+      - 'v*'
   workflow_dispatch:
 
 jobs:
@@ -37,8 +37,8 @@ jobs:
       - name: Set up Python 3.11 (required for Android build)
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-          cache: "pip"
+          python-version: '3.11'
+          cache: 'pip'
 
       - name: Install Android build tools
         run: |
@@ -64,11 +64,18 @@ jobs:
 
       - name: Fix pysidedeploy.spec for Android
         run: |
-          # Change project_dir to root and input_file to main.py
           sed -i 's/^project_dir = .*/project_dir = .\//' pysidedeploy.spec
           sed -i 's/^input_file = .*/input_file = main.py/' pysidedeploy.spec
-          # Downgrade numpy in packages and buildozer requirements
           sed -i 's/numpy==2.5.1/numpy==2.4.6/g' pysidedeploy.spec
+
+      - name: Download PySide6 Android wheels
+        run: |
+          mkdir -p wheels
+          pip download --only-binary=:all: --platform android_21_arm64_v8a --python-version 3.11 --dest wheels PySide6==6.11.1 shiboken6==6.11.1
+          PYSIDE_WHEEL=$(ls wheels/PySide6-*.whl | head -1)
+          SHIBOKEN_WHEEL=$(ls wheels/shiboken6-*.whl | head -1)
+          echo "PYSIDE_WHEEL=$PWD/$PYSIDE_WHEEL" >> $GITHUB_ENV
+          echo "SHIBOKEN_WHEEL=$PWD/$SHIBOKEN_WHEEL" >> $GITHUB_ENV
 
       - name: Install Android SDK & NDK
         run: |
@@ -97,7 +104,9 @@ jobs:
           GANZABARA_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           GANZABARA_ANDROID_KEYALIAS_PASSWORD: ${{ secrets.ANDROID_KEYALIAS_PASSWORD }}
         run: |
-          pyside6-android-deploy -c pysidedeploy.spec --force
+          pyside6-android-deploy -c pysidedeploy.spec --force \
+            --wheel-pyside "$PYSIDE_WHEEL" \
+            --wheel-shiboken "$SHIBOKEN_WHEEL"
 
       - name: Debug - List files
         run: |
