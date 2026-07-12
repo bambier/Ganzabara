@@ -53,10 +53,17 @@ jobs:
         run: |
           pip install pkginfo tqdm packaging
 
-      - name: Download Android NDK and SDK (using Qt's official script)
+      - name: Download Android NDK, SDK, and PySide6 wheels using Qt's script
         run: |
           git clone --depth 1 https://code.qt.io/pyside/pyside-setup
           python pyside-setup/tools/cross_compile_android/main.py --download-only --skip-update --auto-accept-license
+
+      - name: Verify downloaded PySide6 wheels
+        run: |
+          echo "Contents of ~/.pyside6-android-deploy:"
+          ls -la ~/.pyside6-android-deploy/ || echo "Directory not found"
+          echo "Searching for wheels..."
+          find ~/.pyside6-android-deploy -name "*.whl" || echo "No wheels found"
 
       - name: Copy main.py to root and fix spec file
         run: |
