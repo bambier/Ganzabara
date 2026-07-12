@@ -39,15 +39,20 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Install project dependencies
+      - name: Install Android build tools
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
           pip install buildozer==1.5.0 cython==0.29.33 jinja2
 
-      - name: Downgrade numpy for Python 3.11 compatibility
+      - name: Install project dependencies (excluding numpy)
         run: |
-          # numpy 2.5.1 requires Python >=3.12; install the latest 2.4.x that works with 3.11
+          # Remove numpy line from requirements to avoid version conflict
+          grep -v "^numpy==" requirements.txt > requirements_android.txt
+          pip install -r requirements_android.txt
+
+      - name: Install compatible numpy version
+        run: |
+          # numpy 2.5.1 requires Python 3.12+; use 2.4.6 for Python 3.11
           pip install numpy==2.4.6
 
       - name: Install Android deployment requirements
