@@ -4,7 +4,7 @@ name: Deploy Android
 on:
   push:
     tags:
-      - "v*"
+      - 'v*'
   workflow_dispatch:
 
 jobs:
@@ -37,62 +37,38 @@ jobs:
       - name: Set up Python 3.11 (required for Android build)
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-          cache: "pip"
+          python-version: '3.11'
+          cache: 'pip'
 
       - name: Install Android build tools
         run: |
           python -m pip install --upgrade pip
-          pip install buildozer==1.5.0 cython==0.29.33 jinja2
+          pip install buildozer cython jinja2
 
-      - name: Install project dependencies (excluding numpy)
+      - name: Install project dependencies
         run: |
-          grep -v "^numpy" noversion.requirements.txt > requirements_android.txt
-          pip install -r requirements_android.txt
-
-      - name: Install compatible numpy version
-        run: |
-          pip install numpy==2.4.6
+          pip install -r noversion.requirements.txt
 
       - name: Install Android deployment requirements
         run: |
-          pip install pkginfo tqdm packaging==24.1
+          pip install pkginfo tqdm packaging
 
-      - name: Copy main.py to root
+      - name: Download Android NDK and SDK (using Qt's official script)
+        run: |
+          git clone --depth 1 https://code.qt.io/pyside/pyside-setup
+          python pyside-setup/tools/cross_compile_android/main.py --download-only --skip-update --auto-accept-license
+
+      - name: Copy main.py to root and fix spec file
         run: |
           cp src/main.py ./main.py
-
-      - name: Fix pysidedeploy.spec for Android
-        run: |
           sed -i 's/^project_dir = .*/project_dir = .\//' pysidedeploy.spec
           sed -i 's/^input_file = .*/input_file = main.py/' pysidedeploy.spec
-          sed -i 's/numpy==2.5.1/numpy==2.4.6/g' pysidedeploy.spec
-          sed -i 's/numpy>=/numpy==2.4.6/g' pysidedeploy.spec
-
-      - name: Install Android SDK & NDK
-        run: |
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip -q commandlinetools-linux-*.zip
-          mkdir -p android-sdk/cmdline-tools
-          mv cmdline-tools android-sdk/cmdline-tools/latest
-          export ANDROID_SDK_ROOT=$PWD/android-sdk
-          export ANDROID_HOME=$PWD/android-sdk
-          export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
-          yes | sdkmanager --licenses > /dev/null 2>&1 || true
-          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
-          sdkmanager "ndk;25.2.9519653"
-
-      - name: Cache Android SDK
-        uses: actions/cache@v4
-        with:
-          path: android-sdk
-          key: android-sdk-${{ runner.os }}-${{ hashFiles('**/pysidedeploy.spec') }}
-          restore-keys: android-sdk-
+          # Remove version pins from numpy and pandas in spec file
+          sed -i 's/numpy==[0-9.]*/numpy/g' pysidedeploy.spec
+          sed -i 's/pandas==[0-9.]*/pandas/g' pysidedeploy.spec
 
       - name: Run pyside6-android-deploy
         env:
-          ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
-          ANDROID_HOME: ${{ github.workspace }}/android-sdk
           GANZABARA_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           GANZABARA_ANDROID_KEYALIAS_PASSWORD: ${{ secrets.ANDROID_KEYALIAS_PASSWORD }}
         run: |
