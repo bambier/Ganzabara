@@ -1,149 +1,51 @@
-name: Build Android Application
+name: Build Android
 
 on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  build-android:
-    name: Build Android Application
-    runs-on: ubuntu-22.04
+  build:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: "temurin"
-          java-version: "17"
+          distribution: 'temurin'
+          java-version: '17'
 
-      - name: Install system packages
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y patchelf wget unzip zip git autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
-
-      - name: Set Android SDK/NDK environment variables
-        run: |
-          echo "ANDROID_SDK_ROOT=$ANDROID_HOME" >> $GITHUB_ENV
-          echo "ANDROID_NDK_ROOT=$ANDROID_NDK_HOME" >> $GITHUB_ENV
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Set up Android SDK and NDK
+        uses: android-actions/setup-android@v3
         with:
-          python-version: "3.11"
+          cmdline-tools-version: latest
+
+      - name: Set up Python 3.14
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
 
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install packaging
-          pip install PySide6==6.8.2.1
-          pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
+          pip install -r requirements.txt
 
-      - name: Ensure pysidedeploy.spec with target=android
-        run: |
-          if [ ! -f "pysidedeploy.spec" ]; then
-            cat > pysidedeploy.spec <<-EOF
-          [app]
-          name = Ganzabara
-          package_name = ac.soft.ganzabara
-          version = 1.0.0
-          main_script = src/main.py
-          target = android
-          requirements = PySide6
-          android_permissions = INTERNET
-          android_manifest_minsdk = 21
-          android_manifest_targetsdk = 34
+      - name: Build Android APK
+        run: pyside6-android-deploy --config-file pysidedeploy.spec
+        env:
+          ANDROID_HOME: ${{ env.ANDROID_HOME }}
+          ANDROID_NDK_HOME: ${{ env.ANDROID_NDK_HOME }}
 
-          [buildozer]
-          android.release_artifact = apk
-          EOF
-          else
-            grep -q "^target\s*=\s*android" pysidedeploy.spec || echo "target = android" >> pysidedeploy.spec
-          fi
-
-      - name: Ensure translation files exist (if referenced)
-        run: |
-          if [ -f "src/source.qrc" ]; then
-            grep -oE 'resources/locales/[^"]+\.qm' src/source.qrc | while read -r qm_path; do
-              mkdir -p "src/$(dirname "$qm_path")"
-              touch "src/$qm_path"
-            done
-          fi
-
-      - name: Compile Qt resources
-        run: |
-          cd src
-          if grep -q '<file' source.qrc; then
-            pyside6-rcc source.qrc -o source_rc.py
-          else
-            echo "# empty resources" > source_rc.py
-          fi
-
-      - name: Build APK with pyside6-deploy
-        run: |
-          python -m venv build_venv
-          source build_venv/bin/activate
-          pip install --upgrade pip
-          pip install packaging
-          pip install PySide6==6.8.2.1
-          pip install fpdf Jinja2 MarkupSafe numpy pandas peewee python-dateutil pytz PyYAML six tzdata zstandard
-          yes | pyside6-deploy --config pysidedeploy.spec --verbose
-
-      - name: Locate APK
-        id: find_apk
-        run: |
-          echo "Searching for APK..."
-          echo "Current directory contents:"
-          ls -la
-          echo ""
-          echo "Searching common locations:"
-          APK_PATH=$(find . -type f -name "*.apk" -not -path "./android-sdk/*" | head -1)
-          if [ -z "$APK_PATH" ]; then
-            APK_PATH=$(find ~/.pyside6-android-deploy -type f -name "*.apk" 2>/dev/null | head -1)
-          fi
-          if [ -z "$APK_PATH" ]; then
-            APK_PATH=$(find .buildozer -type f -name "*.apk" 2>/dev/null | head -1)
-          fi
-          if [ -z "$APK_PATH" ]; then
-            APK_PATH=$(find deploy -type f -name "*.apk" 2>/dev/null | head -1)
-          fi
-          if [ -z "$APK_PATH" ]; then
-            echo "❌ APK not found. Full find output:"
-            find . -name "*.apk" 2>/dev/null || true
-            exit 1
-          fi
-          echo "APK found: $APK_PATH"
-          mkdir -p final_artifacts
-          cp "$APK_PATH" final_artifacts/Ganzabara-android.apk
-          echo "apk_path=final_artifacts/Ganzabara-android.apk" >> $GITHUB_OUTPUT
-
-      - name: Upload APK as artifact
+      - name: Upload Android artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Ganzabara-Android-APK
-          path: final_artifacts/Ganzabara-android.apk
-          retention-days: 7
-
-      - name: Push APK to software-version branch
-        run: |
-          git config user.name "GitHub Actions Bot"
-          git config user.email "actions@github.com"
-
-          TARGET_BRANCH="software-version"
-          if git ls-remote --heads origin "$TARGET_BRANCH" | grep -q "$TARGET_BRANCH"; then
-            git fetch origin "$TARGET_BRANCH"
-            git checkout "$TARGET_BRANCH" || git checkout -b "$TARGET_BRANCH" origin/"$TARGET_BRANCH"
-          else
-            git checkout --orphan "$TARGET_BRANCH"
-            git rm -rf . > /dev/null 2>&1 || true
-          fi
-
-          find . -name "*.apk" -type f -not -path "./.git/*" -delete
-          cp final_artifacts/Ganzabara-android.apk ./Ganzabara-android.apk
-
-          git add Ganzabara-android.apk
-          git commit -m "Update Android APK - $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
-          git push origin "$TARGET_BRANCH" --force
+          name: android-build
+          path: |
+            *.apk
+            *.aab
