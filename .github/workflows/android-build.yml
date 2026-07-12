@@ -39,11 +39,16 @@ jobs:
           python-version: '3.14'
           cache: 'pip'
 
-      - name: Install dependencies
+      - name: Install project dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install buildozer==1.5.0 cython==0.29.33 jinja2
+
+      - name: Install Android deployment requirements
+        run: |
+          # These are required by pyside6-android-deploy but not listed in your requirements.txt
+          pip install pkginfo tqdm packaging==24.1
 
       - name: Install Android SDK & NDK
         run: |
