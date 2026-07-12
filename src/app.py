@@ -53,6 +53,7 @@ class Application:
         self.app.setApplicationVersion(APP_VERSION)
         self.app.setOrganizationDomain(ORGANIZATION_DOMAIN)
         self.app.setOrganizationName(ORGANIZATION_NAME)
+        self.app.setWindowIcon(QIcon(":/img-icon/app-ico"))
 
         # Configure application components
 

@@ -1,9 +1,11 @@
+# .github/workflows/deploy-android.yml
+
 name: Deploy Android
 
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
   workflow_dispatch:
 
 jobs:
@@ -12,72 +14,153 @@ jobs:
     timeout-minutes: 90
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: "17"
+          distribution: "temurin"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install Android SDK packages
+        run: |
+          sdkmanager --install \
+            "platform-tools" \
+            "platforms;android-34" \
+            "build-tools;35.0.0" \
+            "ndk;26.1.10909125"
 
       - name: Install system dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            openjdk-17-jdk \
-            unzip \
-            zip \
-            libz-dev \
-            libncurses5 \
-            libncursesw5 \
+            ant \
             autoconf \
             automake \
-            libtool \
-            cmake \
+            autopoint \
             ccache \
+            cmake \
+            g++ \
+            gcc \
             git \
-            wget
+            lbzip2 \
+            libffi-dev \
+            libltdl-dev \
+            libtool \
+            libssl-dev \
+            make \
+            patch \
+            pkg-config \
+            python3-dev \
+            python3-venv \
+            unzip \
+            wget \
+            zip \
+            tree
 
-      - name: Set up Python 3.14
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.14'
-          cache: 'pip'
+          python-version: "3.11"
+          cache: "pip"
 
-      - name: Install dependencies
+      - name: Upgrade pip
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install buildozer==1.5.0 cython==0.29.33 jinja2
 
-      - name: Install Android SDK & NDK
+      - name: Install build dependencies
         run: |
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-11076708_latest.zip
-          unzip -q commandlinetools-linux-*.zip
-          mkdir -p android-sdk/cmdline-tools
-          mv cmdline-tools android-sdk/cmdline-tools/latest
-          export ANDROID_SDK_ROOT=$PWD/android-sdk
-          export ANDROID_HOME=$PWD/android-sdk
-          export PATH=$PATH:$ANDROID_SDK_ROOT/cmdline-tools/latest/bin
-          yes | sdkmanager --licenses > /dev/null 2>&1 || true
-          sdkmanager "platform-tools" "platforms;android-34" "build-tools;34.0.0"
-          sdkmanager "ndk;25.2.9519653"
+          pip install \
+            buildozer \
+            cython \
+            jinja2 \
+            wheel \
+            pkginfo \
+            tqdm \
+            packaging==24.1 \
+            GitPython \
+            qtpip
+
+      - name: Install project dependencies
+        run: |
+          pip install -r noversion.requirements.txt
+
+      - name: Download Qt for Android
+        run: |
+          git clone https://code.qt.io/pyside/pyside-setup
+          cd pyside-setup
+
+          python tools/cross_compile_android/main.py \
+            --download-only \
+            --skip-update \
+            --auto-accept-license
+
+          cd ..
+
+          qtpip download PySide6 \
+            --android \
+            --arch aarch64
+
+      - name: Debug environment
+        run: |
+          echo "========== Python =========="
+          python --version
+          which python
+
+          echo "========== importlib =========="
+          python - <<'PY'
+          import sys
+          import importlib
+
+          print(sys.version)
+          print(importlib)
+          print(getattr(importlib, "__file__", None))
+          print(hasattr(importlib, "util"))
+
+          import importlib.util
+          print(importlib.util)
+          PY
+
+          echo "========== Shadowing =========="
+          find . -name "importlib.py"
+          find . -type d -name "importlib"
+
+          echo "========== Wheels =========="
+          find $HOME -name "*.whl"
+          find . -name "*.whl"
+
+          echo "========== Android Wheels =========="
+          find $HOME -name "PySide6*-android*.whl"
+          find $HOME -name "shiboken6*-android*.whl"
 
       - name: Run pyside6-android-deploy
         env:
-          ANDROID_SDK_ROOT: ${{ github.workspace }}/android-sdk
-          ANDROID_HOME: ${{ github.workspace }}/android-sdk
           GANZABARA_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           GANZABARA_ANDROID_KEYALIAS_PASSWORD: ${{ secrets.ANDROID_KEYALIAS_PASSWORD }}
         run: |
-          pyside6-android-deploy -c pysidedeploy.spec
+          cd src
 
-      - name: Find and upload APK/AAB
+          pyside6-android-deploy \
+            -c ../pysidedeploy.spec \
+            --force \
+            --verbose
+
+      - name: Debug output
+        if: always()
         run: |
-          find ./src -name "*.apk" -o -name "*.aab" | head -1 | xargs -I {} cp {} ./ganzabara-android.apk 2>/dev/null || echo "No APK/AAB found"
-        continue-on-error: true
+          find . -name "*.apk"
+          find . -name "*.aab"
+          tree -L 4
 
-      - name: Upload artifact
+      - name: Upload artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ganzabara-android
-          path: |
-            ./src/*.apk
-            ./src/*.aab
-            ./src/bin/
           retention-days: 30
+          path: |
+            **/*.apk
+            **/*.aab
