@@ -29,7 +29,6 @@ jobs:
       
       - name: Install SDKmanager plugins
         run: |
-          sdkmanager --install "cmdline-tools;version"
           sdkmanager --install "platform-tools", "platforms;android-34", "build-tools;35.0.0", "ndk;26.1.10909125"
 
 
