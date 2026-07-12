@@ -80,7 +80,7 @@ jobs:
           GANZABARA_ANDROID_KEYALIAS_PASSWORD: ${{ secrets.ANDROID_KEYALIAS_PASSWORD }}
         run: |
           cd ./src
-          pyside6-android-deploy -c ../pysidedeploy.spec
+          pyside6-android-deploy -c ../pysidedeploy.spec --force
 
       - name: Debug - List files
         run: |
