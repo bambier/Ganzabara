@@ -24,6 +24,14 @@ jobs:
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v4
+      
+      
+      
+      - name: Install SDKmanager plugins
+        run: |
+          sdkmanager --install "cmdline-tools;version"
+          sdkmanager --install "platform-tools", "platforms;android-34", "build-tools;35.0.0", "ndk;26.1.10909125"
+
 
 
       - name: Install system dependencies
@@ -74,12 +82,21 @@ jobs:
           pip install --upgrade -r noversion.requirements.txt
 
 
+
+      - name: Setup Pyside6-android-deploy
+        run: |
+          git clone https://code.qt.io/pyside/pyside-setup
+          cd pyside-setup
+          python tools/cross_compile_android/main.py --download-only --skip-update --auto-accept-license
+          qtpip download PySide6 --android --arch aarch64
+
       - name: Run pyside6-android-deploy
         env:
           GANZABARA_ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           GANZABARA_ANDROID_KEYALIAS_PASSWORD: ${{ secrets.ANDROID_KEYALIAS_PASSWORD }}
         run: |
           cd ./src
+          git clone https://code.qt.io/pyside/pyside-setup
           pyside6-android-deploy -c ../pysidedeploy.spec --force
 
       - name: Debug - List files
