@@ -96,7 +96,6 @@ jobs:
           GANZABARA_ANDROID_KEYALIAS_PASSWORD: ${{ secrets.ANDROID_KEYALIAS_PASSWORD }}
         run: |
           cd ./src
-          git clone https://code.qt.io/pyside/pyside-setup
           pyside6-android-deploy -c ../pysidedeploy.spec --force
 
       - name: Debug - List files
